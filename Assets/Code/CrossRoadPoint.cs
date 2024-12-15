@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CrossRoadPoint : MonoBehaviour, ISelectable
@@ -12,7 +13,8 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
     [SerializeField] Transform wayEast;
     [SerializeField] Transform wayNorth;
     [SerializeField] Transform waySouth;
-    Direction correctDirection;
+    [SerializeField] Direction correctDirectionOnCardinals; // la direzione corretta ipotizzando di entrare da sud
+    Direction correctRelativeDirection;
 
     Transform relativeRight;
     Transform relativeLeft;
@@ -21,6 +23,25 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
 
     Entrance orientation;
     IDrivable player;
+
+    static readonly Dictionary<(Entrance, Direction), Direction> directionMapping = new Dictionary<(Entrance, Direction), Direction>
+    {
+        { (Entrance.EAST, Direction.LEFT), Direction.STRAIGHT },
+        { (Entrance.EAST, Direction.RIGHT), Direction.LEFT },
+        { (Entrance.EAST, Direction.STRAIGHT), Direction.RIGHT },
+
+        { (Entrance.NORTH, Direction.LEFT), Direction.RIGHT },
+        { (Entrance.NORTH, Direction.RIGHT), Direction.LEFT },
+        { (Entrance.NORTH, Direction.STRAIGHT), Direction.STRAIGHT },
+
+        { (Entrance.SOUTH, Direction.LEFT), Direction.LEFT },
+        { (Entrance.SOUTH, Direction.RIGHT), Direction.RIGHT },
+        { (Entrance.SOUTH, Direction.STRAIGHT), Direction.STRAIGHT },
+
+        { (Entrance.WEST, Direction.LEFT), Direction.RIGHT },
+        { (Entrance.WEST, Direction.RIGHT), Direction.STRAIGHT },
+        { (Entrance.WEST, Direction.STRAIGHT), Direction.LEFT }
+    };
 
     private void OnEnable()
     {
@@ -88,6 +109,16 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
                 relativeStraight = wayEast != null ? wayEast : null;
                 break;
         }
+        if (directionMapping.TryGetValue((orientation, correctDirectionOnCardinals), out Direction mappedDirection))
+        {
+            correctRelativeDirection = mappedDirection;
+        }
+        else
+        {
+            Debug.LogError($"Invalid mapping for orientation {orientation} and direction {correctDirectionOnCardinals}");
+        }
+
+
 
     }
 
@@ -106,11 +137,17 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
                 break;
         }
 
-        if (chosenDirection == correctDirection) { UI_Manager.OnGivingFeeback?.Invoke("Correct!"); }
-        else UI_Manager.OnGivingFeeback?.Invoke("Wrong Direction!");
+        if (chosenDirection == correctRelativeDirection)
+        {
+            UI_Manager.OnGivingFeeback?.Invoke("Correct!");
+        }
+        else
+        {
+            UI_Manager.OnGivingFeeback?.Invoke("Wrong Direction!");
+        }
 
         player = null;
-        Debug.Log("direzione scelta");
+        Debug.Log("Direzione scelta");
     }
 
 }

@@ -56,7 +56,5 @@ public enum Entrance
 }
 public enum Direction
 {
-    LEFT,
-    RIGHT,
-    STRAIGHT
+    LEFT, STRAIGHT, RIGHT
 }
