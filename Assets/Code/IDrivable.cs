@@ -8,5 +8,5 @@ public interface IDrivable
 
     void StopAgent(bool value);
 
-    PlayerState State { get; }
+    
 }

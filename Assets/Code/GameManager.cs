@@ -58,9 +58,3 @@ public enum Direction
 {
     LEFT, STRAIGHT, RIGHT
 }
-
-public enum PlayerState
-{
-    DRIVING,
-    ONCHOICE
-}

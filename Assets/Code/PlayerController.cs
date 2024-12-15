@@ -12,8 +12,6 @@ public class PlayerController : MonoBehaviour, IDrivable
     NavMeshAgent agent;
     [SerializeField] Transform initialWaypoint; // destionazione dell'agent allo start
 
-    PlayerState state;
-    public PlayerState State { get => state; }
 
     private void Awake()
     {
@@ -38,10 +36,6 @@ public class PlayerController : MonoBehaviour, IDrivable
         agent.isStopped = value;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other != null) { state = PlayerState.ONCHOICE; }
-        else state = PlayerState.DRIVING;
-    }
+   
 
 }

@@ -34,6 +34,7 @@ public class UI_Manager : MonoBehaviour
     [SerializeField] float buttonsHolderDefaultInY;
 
     Action<Direction> OnChoice; // azione per rimandare la scelta del pulsante al CrossRoads.cs interessato
+    Action OnStopPressed;
 
 
     private void Awake()
@@ -49,23 +50,17 @@ public class UI_Manager : MonoBehaviour
     {
 
         OnGivingFeeback += Notify;
-        BusStop.OnStopPossibility += ShowStopButton;
+        
         GameManager.OnUpdateScore += UpdateScore;
     }
     private void OnDisable()
     {
 
         OnGivingFeeback -= Notify;
-        BusStop.OnStopPossibility -= ShowStopButton;
+        
         GameManager.OnUpdateScore -= UpdateScore;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="leftDirectionTransform"></param>
-    /// <param name="straightDirectionTransform"></param>
-    /// <param name="rightDirectionTransform"></param>
-    /// <param name="onChoiceMade"></param>
+    
     public void ShowButtonsAvailable(Transform left, Transform straight, Transform right, Action<Direction> onChoiceMade)
     {
         this.OnChoice = onChoiceMade;
@@ -87,8 +82,9 @@ public class UI_Manager : MonoBehaviour
         DisableButtons();
     }
 
-    void ShowStopButton(bool value)
+    public void ShowStopButton(bool value, Action stopPressed)
     {
+        OnStopPressed = stopPressed;
         if(buttonsHolder.gameObject.activeInHierarchy != value) buttonsHolder.gameObject.SetActive(value);
         stopButton.gameObject.SetActive(value);
         if (buttonsHolder.anchoredPosition.y != buttonsHolderDefaultInY && value) buttonsHolder.transform.DOLocalMoveY(buttonsHolderDefaultInY, 0.5f);
@@ -97,7 +93,7 @@ public class UI_Manager : MonoBehaviour
 
     public void StopButtonPressed()
     {
-        BusStop.OnStopPressed?.Invoke();
+        OnStopPressed?.Invoke();
         buttonsHolder.DOLocalMoveY(buttonsHolderDefaultOutY, 1);
         DisableButtons();
     }

@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class BusStop : MonoBehaviour
 {
-    public static Action<bool> OnStopPossibility;
-    public static Action OnStopPressed;
+
+
 
     [Header("Settings")]
     [SerializeField] bool isAPlayerStop;
@@ -16,33 +16,26 @@ public class BusStop : MonoBehaviour
 
     IDrivable player;
 
-    private void OnEnable()
-    {
-        OnStopPressed += StopAtBusStop;
-    }
-    private void OnDisable()
-    {
-        OnStopPressed -= StopAtBusStop;
-    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out IDrivable bus))
         {
             player = bus;
-            OnStopPossibility?.Invoke(true);
+            UI_Manager.instance.ShowStopButton(true, StopAtBusStop);
         }
 
     }
 
     private void OnTriggerExit(Collider other)
     {
-        OnStopPossibility?.Invoke(false);
-        player = null;
+        UI_Manager.instance.ShowStopButton(false, null);
+
     }
 
     void StopAtBusStop()
     {
-        
+
         if (isAPlayerStop)
         {
             GameManager.OnUpdateScore?.Invoke();
@@ -62,6 +55,8 @@ public class BusStop : MonoBehaviour
             yield return null;
         }
         player.StopAgent(false);
+        player = null;
+        if (isAPlayerStop) { this.gameObject.SetActive(false); }
     }
 
 }
