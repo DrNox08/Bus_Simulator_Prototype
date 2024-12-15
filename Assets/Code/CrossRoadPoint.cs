@@ -16,6 +16,7 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
     [SerializeField] Direction correctDirectionOnCardinals; // la direzione corretta ipotizzando di entrare da sud
     Direction correctRelativeDirection;
 
+
     Transform relativeRight;
     Transform relativeLeft;
     Transform relativeStraight;
@@ -148,6 +149,16 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
 
         player = null;
         Debug.Log("Direzione scelta");
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        List<Transform> drawable = new List<Transform> { wayEast, wayWest, wayNorth, waySouth };
+        foreach (Transform t in drawable)
+        {
+            if (t != null) Gizmos.DrawLine(transform.position, t.position);
+        }
     }
 
 }
