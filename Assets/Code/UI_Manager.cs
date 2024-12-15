@@ -73,7 +73,7 @@ public class UI_Manager : MonoBehaviour
         if (straight != null) upButton.gameObject.SetActive(true);
         if (right != null) rightButton.gameObject.SetActive(true);
 
-        buttonsHolder.gameObject.SetActive(true);
+        if (!buttonsHolder.gameObject.activeInHierarchy) buttonsHolder.gameObject.SetActive(true);
 
         if (buttonsHolder.anchoredPosition.y != buttonsHolderDefaultInY) buttonsHolder.transform.DOLocalMoveY(buttonsHolderDefaultInY, 0.5f);
     }
@@ -89,7 +89,7 @@ public class UI_Manager : MonoBehaviour
 
     void ShowStopButton(bool value)
     {
-        buttonsHolder.gameObject.SetActive(value);
+        if(buttonsHolder.gameObject.activeInHierarchy != value) buttonsHolder.gameObject.SetActive(value);
         stopButton.gameObject.SetActive(value);
         if (buttonsHolder.anchoredPosition.y != buttonsHolderDefaultInY && value) buttonsHolder.transform.DOLocalMoveY(buttonsHolderDefaultInY, 0.5f);
         else buttonsHolder.transform.DOLocalMoveY(buttonsHolderDefaultOutY, 0.5f);

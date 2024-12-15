@@ -7,4 +7,6 @@ public interface IDrivable
     void SetNextWaypoint(Transform nextDestionation);
 
     void StopAgent(bool value);
+
+    PlayerState State { get; }
 }
