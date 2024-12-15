@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class CrossRoadPoint : MonoBehaviour, ISelectable
 {
-    public static Action<Transform, Transform, Transform> OnGivingChoice;
-    public static Action<Direction> OnChoiceMade;
+    
+    public Action<Direction> OnChoiceMade;
 
     [SerializeField] Transform wayWest;
     [SerializeField] Transform wayEast;
@@ -44,6 +44,8 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
         { (Entrance.WEST, Direction.STRAIGHT), Direction.LEFT }
     };
 
+
+
     private void OnEnable()
     {
         OnChoiceMade += SetChosenDirection;
@@ -68,16 +70,16 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
 
             player = playerInTrigger;
 
-            ConvertDirections(player);
+            ConvertDirections();
 
-            OnGivingChoice(relativeLeft, relativeStraight, relativeRight);
+            UI_Manager.instance.ShowButtonsAvailable(relativeLeft, relativeStraight, relativeRight, SetChosenDirection);
 
             Debug.Log($"Il player è entrato da: {orientation}");
 
         }
     }
 
-    void ConvertDirections(IDrivable player)
+    void ConvertDirections()
     {
         // resetta ogni riferimento ai transform relativi al player
         relativeLeft = null;
@@ -93,8 +95,8 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
                 break;
 
             case Entrance.NORTH:
-                relativeLeft = wayWest != null ? wayWest : null;
-                relativeRight = wayEast != null ? wayEast : null;
+                relativeLeft = wayEast != null ? wayEast : null;
+                relativeRight = wayWest != null ? wayWest : null;
                 relativeStraight = waySouth != null ? waySouth : null;
                 break;
 
@@ -114,17 +116,17 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
         {
             correctRelativeDirection = mappedDirection;
         }
-        else
-        {
-            Debug.LogError($"Invalid mapping for orientation {orientation} and direction {correctDirectionOnCardinals}");
-        }
+        
 
-
+        
 
     }
 
+
+
     public void SetChosenDirection(Direction chosenDirection)
     {
+        
         switch (chosenDirection)
         {
             case Direction.LEFT:

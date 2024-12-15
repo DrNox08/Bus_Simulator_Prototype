@@ -6,7 +6,7 @@ using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
 {
-    public static Action OnCrossRoadEvent; // evento per gestire l'inizio e la fine della scelta di direzione
+    
     public static Action OnUpdateScore;
     public static Action OnGameEnd;
 
@@ -23,12 +23,12 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        OnCrossRoadEvent += SlowTime;
+        
         OnUpdateScore += IncreaseScore;
     }
     private void OnDisable()
     {
-        OnCrossRoadEvent -= SlowTime;
+        
         OnUpdateScore -= IncreaseScore;
     }
 
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    void SlowTime()
+    void SlowTime() // NON IMPLEMENTATA LA MECCANICA RELATIVA
     {
         if (Time.timeScale == 1) Time.timeScale = 0.5f; // se l'evento è iniziato và in slowmo,altrimenti torna a velocità normale
         else Time.timeScale = 1;

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class UI_Manager : MonoBehaviour
 {
-
+    public static UI_Manager instance;
     public static Action<string> OnGivingFeeback; // evento per il popup di feedback
 
     [Header("References")]
@@ -33,51 +33,58 @@ public class UI_Manager : MonoBehaviour
     [SerializeField] float buttonsHolderDefaultOutY;
     [SerializeField] float buttonsHolderDefaultInY;
 
+    Action<Direction> OnChoice; // azione per rimandare la scelta del pulsante al CrossRoads.cs interessato
+
 
     private void Awake()
     {
-        leftButton.gameObject.SetActive(false);
-        rightButton.gameObject.SetActive(false);
-        upButton.gameObject.SetActive(false);
-        stopButton.gameObject.SetActive(false);
-        
-        buttonsHolder.gameObject.SetActive(false);
-        notificationHolder.gameObject.SetActive(false);
+        instance = this;
+        DisableButtons();
+        notificationHolder.SetActive(false);
         buttonsHolder.anchoredPosition = new Vector2(buttonsHolder.anchoredPosition.x, -600);
         scoreText.text = "0";
     }
 
     private void OnEnable()
     {
-        CrossRoadPoint.OnGivingChoice += ShowButtonsAvailable;
+
         OnGivingFeeback += Notify;
         BusStop.OnStopPossibility += ShowStopButton;
         GameManager.OnUpdateScore += UpdateScore;
     }
     private void OnDisable()
     {
-        CrossRoadPoint.OnGivingChoice -= ShowButtonsAvailable;
+
         OnGivingFeeback -= Notify;
         BusStop.OnStopPossibility -= ShowStopButton;
         GameManager.OnUpdateScore -= UpdateScore;
     }
-
-    void ShowButtonsAvailable(Transform left, Transform straight, Transform right)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="leftDirectionTransform"></param>
+    /// <param name="straightDirectionTransform"></param>
+    /// <param name="rightDirectionTransform"></param>
+    /// <param name="onChoiceMade"></param>
+    public void ShowButtonsAvailable(Transform left, Transform straight, Transform right, Action<Direction> onChoiceMade)
     {
+        this.OnChoice = onChoiceMade;
         if (left != null) leftButton.gameObject.SetActive(true);
         if (straight != null) upButton.gameObject.SetActive(true);
         if (right != null) rightButton.gameObject.SetActive(true);
 
         buttonsHolder.gameObject.SetActive(true);
-        
+
         if (buttonsHolder.anchoredPosition.y != buttonsHolderDefaultInY) buttonsHolder.transform.DOLocalMoveY(buttonsHolderDefaultInY, 0.5f);
     }
 
     public void DirectionButtonPressed(string direction)
     {
         Enum.TryParse(direction, out Direction choice);
-        CrossRoadPoint.OnChoiceMade?.Invoke(choice);
-        buttonsHolder.DOLocalMoveY(buttonsHolderDefaultOutY, 1);
+        Debug.Log(choice.ToString());
+        OnChoice?.Invoke(choice);
+        buttonsHolder.DOLocalMoveY(buttonsHolderDefaultOutY, 0.5f);
+        DisableButtons();
     }
 
     void ShowStopButton(bool value)
@@ -92,7 +99,17 @@ public class UI_Manager : MonoBehaviour
     {
         BusStop.OnStopPressed?.Invoke();
         buttonsHolder.DOLocalMoveY(buttonsHolderDefaultOutY, 1);
+        DisableButtons();
+    }
+
+    void DisableButtons()
+    {
+        leftButton.gameObject.SetActive(false);
+        rightButton.gameObject.SetActive(false);
+        upButton.gameObject.SetActive(false);
         stopButton.gameObject.SetActive(false);
+
+        buttonsHolder.gameObject.SetActive(false);
     }
 
     void UpdateScore()
