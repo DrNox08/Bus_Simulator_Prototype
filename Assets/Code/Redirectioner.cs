@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Redirectioner : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] Transform wayPoint;
+
+    
+
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.TryGetComponent(out IDrivable player)) player.SetNextWaypoint(wayPoint);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDrawGizmos()
     {
-        
+        Gizmos.color = Color.red;
+
+        Gizmos.DrawLine(transform.position, wayPoint.position); 
     }
 }
