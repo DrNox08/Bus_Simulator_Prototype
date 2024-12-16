@@ -11,9 +11,9 @@ public class GameManager : MonoBehaviour
     public static Action OnGameEnd;
 
     static int score;
-    int maxScore = 1;
+    int maxScore = 7;
 
-    public static int Score { get => score; private set => score = value; } // proprietà per accedere allo score ma non modificarlo
+    public static int Score { get => score; private set => score = value; } 
 
     private void Awake()
     {

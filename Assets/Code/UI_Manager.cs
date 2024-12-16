@@ -121,8 +121,9 @@ public class UI_Manager : MonoBehaviour
     void Notify(string message) // it shows the messages with a pop up animation (using DOTWEEN)
     {
 
+        DOTween.Kill(notificationHolder.transform);
+        DOTween.Kill("NotificationDelay");
         notificationText.text = message;
-
 
         notificationHolder.transform.localScale = Vector3.zero;
         notificationHolder.SetActive(true);
@@ -138,7 +139,7 @@ public class UI_Manager : MonoBehaviour
                 {
                     notificationHolder.SetActive(false);
                 });
-            });
+            }).SetId("NotificationDelay");
         });
     }
 

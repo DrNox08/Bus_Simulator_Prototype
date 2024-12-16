@@ -35,7 +35,7 @@ public class RenderManager : MonoBehaviour
         {
             // Espandi il bounding box dell'oggetto
             Bounds expandedBounds = renderer.bounds;
-            expandedBounds.Expand(3f); // Espande il bounding box di 1 unità
+            expandedBounds.Expand(10f); // Espande il bounding box di 1 unità
 
             bool isVisible = GeometryUtility.TestPlanesAABB(frustumPlanes, expandedBounds);
             renderer.enabled = isVisible;
