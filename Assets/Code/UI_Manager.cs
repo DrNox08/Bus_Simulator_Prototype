@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_Manager : MonoBehaviour
@@ -29,6 +30,8 @@ public class UI_Manager : MonoBehaviour
 
     [SerializeField] TMP_Text notificationText;
 
+    [SerializeField] GameObject endPanel;
+
     [Header("Settings")]
     [SerializeField] float buttonsHolderDefaultOutY;
     [SerializeField] float buttonsHolderDefaultInY;
@@ -42,25 +45,26 @@ public class UI_Manager : MonoBehaviour
         instance = this;
         DisableButtons();
         notificationHolder.SetActive(false);
+        endPanel.SetActive(false);
         buttonsHolder.anchoredPosition = new Vector2(buttonsHolder.anchoredPosition.x, -600);
         scoreText.text = "0";
     }
 
     private void OnEnable()
     {
-
+        GameManager.OnGameEnd += ShowEndScreen;
         OnGivingFeeback += Notify;
-        
         GameManager.OnUpdateScore += UpdateScore;
+        
     }
     private void OnDisable()
     {
-
-        OnGivingFeeback -= Notify;
         
+        OnGivingFeeback -= Notify;
+        GameManager.OnGameEnd -= ShowEndScreen;
         GameManager.OnUpdateScore -= UpdateScore;
     }
-    
+
     public void ShowButtonsAvailable(Transform left, Transform straight, Transform right, Action<Direction> onChoiceMade)
     {
         this.OnChoice = onChoiceMade;
@@ -85,7 +89,7 @@ public class UI_Manager : MonoBehaviour
     public void ShowStopButton(bool value, Action stopPressed)
     {
         OnStopPressed = stopPressed;
-        if(buttonsHolder.gameObject.activeInHierarchy != value) buttonsHolder.gameObject.SetActive(value);
+        if (buttonsHolder.gameObject.activeInHierarchy != value) buttonsHolder.gameObject.SetActive(value);
         stopButton.gameObject.SetActive(value);
         if (buttonsHolder.anchoredPosition.y != buttonsHolderDefaultInY && value) buttonsHolder.transform.DOLocalMoveY(buttonsHolderDefaultInY, 0.5f);
         else buttonsHolder.transform.DOLocalMoveY(buttonsHolderDefaultOutY, 0.5f);
@@ -104,9 +108,9 @@ public class UI_Manager : MonoBehaviour
         rightButton.gameObject.SetActive(false);
         upButton.gameObject.SetActive(false);
         stopButton.gameObject.SetActive(false);
-
         buttonsHolder.gameObject.SetActive(false);
     }
+
 
     void UpdateScore()
     {
@@ -114,7 +118,7 @@ public class UI_Manager : MonoBehaviour
         Debug.Log(scoreText.text);
     }
 
-    void Notify(string message)
+    void Notify(string message) // it shows the messages with a pop up animation (using DOTWEEN)
     {
 
         notificationText.text = message;
@@ -139,8 +143,22 @@ public class UI_Manager : MonoBehaviour
     }
 
 
+    //ENDGAME
+    void ShowEndScreen()
+    {
+        DisableButtons();
+        endPanel.gameObject.SetActive(true);
+    }
 
+    public void ReplayGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 
 
 

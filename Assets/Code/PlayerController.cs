@@ -17,7 +17,16 @@ public class PlayerController : MonoBehaviour, IDrivable
     {
         agent = GetComponent<NavMeshAgent>();
     }
-        
+
+    private void OnEnable()
+    {
+        GameManager.OnGameEnd += EndAgent;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnGameEnd -= EndAgent;
+    }
+
 
     private void Start()
     {
@@ -34,6 +43,12 @@ public class PlayerController : MonoBehaviour, IDrivable
     public void StopAgent(bool value) // per fermare o rilasciare l'agent
     {
         agent.isStopped = value;
+    }
+
+    void EndAgent()
+    {
+        agent.isStopped = true;
+        Debug.Log("AGENTE FERMATO");
     }
 
    

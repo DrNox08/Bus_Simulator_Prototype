@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public static Action OnGameEnd;
 
     static int score;
-    int maxScore = 10;
+    int maxScore = 1;
 
     public static int Score { get => score; private set => score = value; } // proprietà per accedere allo score ma non modificarlo
 
@@ -34,16 +34,28 @@ public class GameManager : MonoBehaviour
 
     void IncreaseScore()
     {
-        if (score < maxScore) score++;
-        else OnGameEnd?.Invoke(); //TODO: IMPLEMENTARE LOGICA DI FINE GIOCO
-        Debug.Log(score.ToString());
-        
+        score++;
+        if (score == maxScore) StartCoroutine(Timer());
     }
+       
+        
 
     void SlowTime() // NON IMPLEMENTATA LA MECCANICA RELATIVA
     {
         if (Time.timeScale == 1) Time.timeScale = 0.5f; // se l'evento è iniziato và in slowmo,altrimenti torna a velocità normale
         else Time.timeScale = 1;
+    }
+
+    IEnumerator Timer()
+    {
+        
+        float timeElapsed = 0;
+        while (timeElapsed < 2)
+        {
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        OnGameEnd?.Invoke();
     }
 }
 
@@ -56,5 +68,7 @@ public enum Entrance
 }
 public enum Direction
 {
-    LEFT, STRAIGHT, RIGHT
+    LEFT,
+    STRAIGHT,
+    RIGHT
 }

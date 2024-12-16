@@ -16,6 +16,15 @@ public class BusStop : MonoBehaviour
 
     IDrivable player;
 
+    private void OnEnable()
+    {
+        GameManager.OnGameEnd += KillThisObj;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnGameEnd -= KillThisObj;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -59,4 +68,8 @@ public class BusStop : MonoBehaviour
         if (isAPlayerStop) { this.gameObject.SetActive(false); }
     }
 
+    void KillThisObj() // if the game is over, this script will no longer provide effects
+    {
+        this.gameObject.SetActive(false);
+    }
 }
