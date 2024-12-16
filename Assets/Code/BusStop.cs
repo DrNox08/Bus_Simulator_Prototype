@@ -26,7 +26,7 @@ public class BusStop : MonoBehaviour
         GameManager.OnGameEnd -= KillThisObj;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other) // player detected: send it to UI
     {
         if (other.TryGetComponent(out IDrivable bus))
         {
@@ -36,7 +36,7 @@ public class BusStop : MonoBehaviour
 
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other) // player is no longer in trigger: send it to UI
     {
         UI_Manager.instance.ShowStopButton(false, null);
 
@@ -45,7 +45,7 @@ public class BusStop : MonoBehaviour
     void StopAtBusStop()
     {
 
-        if (isAPlayerStop)
+        if (isAPlayerStop) // send to UI the notifications 
         {
             GameManager.OnUpdateScore?.Invoke();
             UI_Manager.OnGivingFeeback?.Invoke(notificationRightStop);

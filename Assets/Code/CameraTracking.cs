@@ -5,11 +5,11 @@ using UnityEngine;
 public class CameraTracking : MonoBehaviour
 {
     [Header("Player Ref")]
-    public Transform player; // Riferimento al Player
+    public Transform player; 
 
     [Header("Camera Settings")]
-    [SerializeField] Vector3 offset; // Offset della Camera rispetto al Player
-    [SerializeField] float followSpeed = 5f; // Velocità con cui la Camera segue il Player
+    [SerializeField] Vector3 offset; 
+    [SerializeField] float followSpeed = 5f; 
 
     Camera cam;
 
@@ -22,7 +22,7 @@ public class CameraTracking : MonoBehaviour
     {
         if (player != null)
         {
-            Vector3 targetPosition = player.position + offset; // tiene la posizione del player aggiornata e agginge un offset
+            Vector3 targetPosition = player.position + offset; 
             
             transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
         }

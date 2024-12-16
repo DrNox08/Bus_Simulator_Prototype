@@ -36,7 +36,7 @@ public class UI_Manager : MonoBehaviour
     [SerializeField] float buttonsHolderDefaultOutY;
     [SerializeField] float buttonsHolderDefaultInY;
 
-    Action<Direction> OnChoice; // azione per rimandare la scelta del pulsante al CrossRoads.cs interessato
+    Action<Direction> OnChoice; // action to send back to the active CrossRoadPoint.cs the chosen direction
     Action OnStopPressed;
 
 
@@ -65,7 +65,7 @@ public class UI_Manager : MonoBehaviour
         GameManager.OnUpdateScore -= UpdateScore;
     }
 
-    public void ShowButtonsAvailable(Transform left, Transform straight, Transform right, Action<Direction> onChoiceMade)
+    public void ShowButtonsAvailable(Transform left, Transform straight, Transform right, Action<Direction> onChoiceMade)// show the button according to wich direction is available
     {
         this.OnChoice = onChoiceMade;
         if (left != null) leftButton.gameObject.SetActive(true);
@@ -77,7 +77,7 @@ public class UI_Manager : MonoBehaviour
         if (buttonsHolder.anchoredPosition.y != buttonsHolderDefaultInY) buttonsHolder.transform.DOLocalMoveY(buttonsHolderDefaultInY, 0.5f);
     }
 
-    public void DirectionButtonPressed(string direction)
+    public void DirectionButtonPressed(string direction) // send back the button pressed with its relative direction
     {
         Enum.TryParse(direction, out Direction choice);
         Debug.Log(choice.ToString());

@@ -8,14 +8,14 @@ public class RenderManager : MonoBehaviour
     Plane[] frustumPlanes;
     List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
 
-    [SerializeField] int frameInterval; // intervallo: serve a decidere ogni quanti frame eseguire funzioni in update
-    int frameCount = 0; // per il conteggio dei frame
+    [SerializeField] int frameInterval;
+    int frameCount = 0;
 
     void Start()
     {
         mainCamera = Camera.main;
 
-        // Trova tutti i MeshRenderer nella scena
+
         MeshRenderer[] renderers = FindObjectsOfType<MeshRenderer>();
         meshRenderers.AddRange(renderers);
     }
@@ -24,18 +24,20 @@ public class RenderManager : MonoBehaviour
     {
         frameCount++;
 
-        if (frameCount % frameInterval == 0) { UpdateMeshVisibility(); }
+        if (frameCount % frameInterval == 0) { UpdateMeshVisibility(); } // setting the operation to run every X frames
     }
 
     void UpdateMeshVisibility()
     {
-        // calcola i piani del frustum della telecamera
         frustumPlanes = GeometryUtility.CalculateFrustumPlanes(mainCamera);
 
-        // cicla i meshrenderer e li attiva/disattiva basandosi sul frustum
         foreach (var renderer in meshRenderers)
         {
-            bool isVisible = GeometryUtility.TestPlanesAABB(frustumPlanes, renderer.bounds);
+            // Espandi il bounding box dell'oggetto
+            Bounds expandedBounds = renderer.bounds;
+            expandedBounds.Expand(3f); // Espande il bounding box di 1 unità
+
+            bool isVisible = GeometryUtility.TestPlanesAABB(frustumPlanes, expandedBounds);
             renderer.enabled = isVisible;
         }
     }

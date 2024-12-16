@@ -13,7 +13,7 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
     [SerializeField] Transform wayEast;
     [SerializeField] Transform wayNorth;
     [SerializeField] Transform waySouth;
-    [SerializeField] Direction correctDirectionOnCardinals; // la direzione corretta ipotizzando di entrare da sud
+    [SerializeField] Direction correctDirectionOnCardinals; // to set wich is the correct direction assuming we are looking north
     Direction correctRelativeDirection;
 
 
@@ -25,7 +25,7 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
     Entrance orientation;
     IDrivable player;
 
-    static readonly Dictionary<(Entrance, Direction), Direction> directionMapping = new Dictionary<(Entrance, Direction), Direction>
+    static readonly Dictionary<(Entrance, Direction), Direction> directionMapping = new Dictionary<(Entrance, Direction), Direction> // pairs the orientation+cardinal to the relative correct direction
     {
         { (Entrance.EAST, Direction.LEFT), Direction.STRAIGHT },
         { (Entrance.EAST, Direction.RIGHT), Direction.LEFT },
@@ -60,7 +60,7 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
         if (other.TryGetComponent(out IDrivable playerInTrigger))
         {
             Vector3 direction = other.transform.position - transform.position;
-            direction = transform.InverseTransformDirection(direction); // converte la direzione da world a local
+            direction = transform.InverseTransformDirection(direction); // converts the transform from world to local
 
 
             if (Mathf.Abs(direction.x) > Mathf.Abs(direction.z))
@@ -81,12 +81,12 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
 
     void ConvertDirections()
     {
-        // resetta ogni riferimento ai transform relativi al player
+        // reset every variables
         relativeLeft = null;
         relativeRight = null;
         relativeStraight = null;
 
-        switch (orientation) // a seconda del lato da cui entra il player, converte le direzioni in base i punti caridali
+        switch (orientation) // convert the cardianal transform to relative-to-player
         {
             case Entrance.EAST:
                 relativeLeft = waySouth != null ? waySouth : null;
@@ -124,7 +124,7 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
 
 
 
-    public void SetChosenDirection(Direction chosenDirection)
+    public void SetChosenDirection(Direction chosenDirection) // get the input back and set the new agent relative destination
     {
         
         switch (chosenDirection)
@@ -150,9 +150,10 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
         }
 
         player = null;
-        Debug.Log("Direzione scelta");
     }
+        
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -162,5 +163,6 @@ public class CrossRoadPoint : MonoBehaviour, ISelectable
             if (t != null) Gizmos.DrawLine(transform.position, t.position);
         }
     }
+#endif
 
 }

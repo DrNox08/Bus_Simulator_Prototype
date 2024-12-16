@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         OnUpdateScore -= IncreaseScore;
     }
 
-    void IncreaseScore()
+    void IncreaseScore() // update the score by 1 and check if the game is over, using a timer to match the bus stop time
     {
         score++;
         if (score == maxScore) StartCoroutine(Timer());
@@ -59,14 +59,14 @@ public class GameManager : MonoBehaviour
     }
 }
 
-public enum Entrance
+public enum Entrance // enum used to determine the orientation of the player
 {
     NORTH,
     SOUTH,
     EAST,
     WEST
 }
-public enum Direction
+public enum Direction // enum used for inputs and setting directions
 {
     LEFT,
     STRAIGHT,

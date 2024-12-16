@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour, IDrivable
 {
     
     NavMeshAgent agent;
-    [SerializeField] Transform initialWaypoint; // destionazione dell'agent allo start
+    [SerializeField] Transform initialWaypoint; // the starting agent's destination
 
 
     private void Awake()
@@ -30,22 +30,22 @@ public class PlayerController : MonoBehaviour, IDrivable
 
     private void Start()
     {
-        initialWaypoint.parent = null; // rilascia il transform iniziale dalla hierarchy
+        initialWaypoint.parent = null; // release the transform from the hierarchy
         agent.SetDestination(initialWaypoint.position);
     }
        
 
-    public void SetNextWaypoint(Transform nextDestionation) // per settare il prossimo transform di destinazione
+    public void SetNextWaypoint(Transform nextDestionation) // to set the next agent's destination
     {
         agent.SetDestination(nextDestionation.position);
     }
 
-    public void StopAgent(bool value) // per fermare o rilasciare l'agent
+    public void StopAgent(bool value) // stop or play the agent
     {
         agent.isStopped = value;
     }
 
-    void EndAgent()
+    void EndAgent() // stop the agent at the end of the game
     {
         agent.isStopped = true;
         Debug.Log("AGENTE FERMATO");
