@@ -111,12 +111,29 @@ public class UI_Manager : MonoBehaviour
         buttonsHolder.gameObject.SetActive(false);
     }
 
+    public bool IsButtonActive(string button)
+    {
+        switch (button)
+        {
+            case "LEFT":
+                return leftButton.gameObject.activeSelf;
+            case "UP":
+                return upButton.gameObject.activeSelf;
+            case "RIGHT":
+                return rightButton.gameObject.activeSelf;
+            case "STOP":
+                return stopButton.gameObject.activeSelf;
+            default:
+                return false;
+        }
+    }
 
-    void UpdateScore()
+
+        void UpdateScore()
     {
         scoreText.text = GameManager.Score.ToString();
-        Debug.Log(scoreText.text);
     }
+        
 
     void Notify(string message) // it shows the messages with a pop up animation (using DOTWEEN)
     {

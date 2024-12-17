@@ -48,8 +48,8 @@ public class PlayerController : MonoBehaviour, IDrivable
     void EndAgent() // stop the agent at the end of the game
     {
         agent.isStopped = true;
-        Debug.Log("AGENTE FERMATO");
     }
+        
 
    
 

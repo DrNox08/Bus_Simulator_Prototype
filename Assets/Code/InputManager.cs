@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class InputManager 
 {
-    static ActionMap actionMap;
+    public static ActionMap actionMap;
 
     static InputManager ()
     {
